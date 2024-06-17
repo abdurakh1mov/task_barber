@@ -3,32 +3,44 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cat_event/cat_fact_bloc.dart';
+import 'package:intl/intl.dart';
+import '../db/bloc.dart';
+import '../db_event/cat_event_db.dart';
 
 class SavedFactsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final catFactBloc = BlocProvider.of<CatFactBloc>(context);
-
+    final savedCatBloc = BlocProvider.of<SavedCatBloc>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Saved Cat Facts'),
-      ),
-      body: ListView.builder(
-        itemCount: catFactBloc.savedFacts.length,
-        itemBuilder: (context, index) {
-          final item = catFactBloc.savedFacts[index];
-          final fact = item.fact;
-          final imageUrl = item.imageUrl;
-          final createdAt = item.createdAt;
-          final bytes = base64Decode(imageUrl);
-          return itemSavedFacts(bytes, fact, createdAt);
-        },
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Saved Cat Facts'),
+        ),
+        body: BlocBuilder<SavedCatBloc, CatState>(
+          builder: (context, state) {
+            if (state is CatInitial) {
+              savedCatBloc.loadCats();
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is CatLoaded) {
+              final cats = state.tasks;
+              return ListView.builder(
+                itemCount: cats.length,
+                itemBuilder: (context, index) {
+                  final item = cats[index];
+                  final fact = item;
+                  final imageUrl = item.createdAt;
+                  final createdAt = item.image;
+                  final bytes = base64Decode(createdAt);
+                  return itemSavedFacts(bytes, fact.fact, imageUrl);
+                },
+              );
+            } else {
+              return const Center(child: Text('Error loading cats.'));
+            }
+          },
+        ));
   }
 
-  Widget itemSavedFacts(Uint8List bytes, String fact, String createdAt) {
+  Widget itemSavedFacts(Uint8List image, String fact, String createdAt) {
     return Card(
       margin: const EdgeInsets.all(8.0),
       elevation: 4.0,
@@ -40,7 +52,7 @@ class SavedFactsPage extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: Image.memory(
-                bytes,
+                image,
                 width: 100,
                 height: 100,
                 fit: BoxFit.cover,
