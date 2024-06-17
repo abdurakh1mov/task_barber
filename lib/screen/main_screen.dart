@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_barber/db/bloc.dart';
 import '../cat_event/cat_fact_bloc.dart';
 import '../cat_event/cat_fact_event.dart';
 import '../cat_event/cat_fact_state.dart';
+import '../db/model.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -43,6 +45,12 @@ class _HomePageState extends State<MainScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (state is CatFactLoaded) {
             try {
+              final newTask = Cat(
+                fact: state.fact,
+                createdAt: state.createdAt,
+                image: state.imageUrl,
+              );
+              context.read<SavedCatBloc>().addCat(newTask);
               final bytes = base64Decode(state.imageUrl);
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
