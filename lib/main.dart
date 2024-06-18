@@ -5,7 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:task_barber/db/bloc.dart';
 import 'package:task_barber/screen/main_screen.dart';
 import 'package:task_barber/screen/saved_facts_screen.dart';
-// import 'package:path_provider/path_provider.dart' as path_provider;
 import 'cat_event/cat_fact_bloc.dart';
 import 'db/adapter.dart';
 import 'db/model.dart';
@@ -17,12 +16,7 @@ void main() async {
   if (!Hive.isAdapterRegistered(0)) {
     Hive.registerAdapter(CatAdapter());
   }
-  // Hive.registerAdapter(CatAdapter());
-  // await clearHiveData();
-  // if (!await Hive.boxExists('cats')) {
-  // if()
-  await Hive.openBox<Cat>('cats');
-  // }
+  await Hive.openBox<CatSavedModel>('cats');
   runApp(const CatFactApp());
 }
 
@@ -39,7 +33,7 @@ class CatFactApp extends StatelessWidget {
       providers: [
         BlocProvider<SavedCatBloc>(
           create: (context) => SavedCatBloc(
-            Hive.box<Cat>('cats'),
+            Hive.box<CatSavedModel>('cats'),
           ),
         ),
         BlocProvider<CatFactBloc>(
