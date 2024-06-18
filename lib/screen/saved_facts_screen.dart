@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import '../db/bloc.dart';
 import '../db_event/cat_event_db.dart';
 
@@ -29,6 +28,7 @@ class SavedFactsPage extends StatelessWidget {
                   final fact = item;
                   final imageUrl = item.createdAt;
                   final createdAt = item.image;
+                  print(createdAt);
                   final bytes = base64Decode(createdAt);
                   return itemSavedFacts(bytes, fact.fact, imageUrl);
                 },

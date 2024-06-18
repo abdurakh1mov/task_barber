@@ -28,7 +28,7 @@ class CatInitial extends CatState {}
 class CatLoading extends CatState {}
 
 class CatLoaded extends CatState {
-  final List<Cat> cat;
+  final List<CatSavedModel> cat;
 
   CatLoaded(this.cat);
 }

@@ -45,7 +45,7 @@ class _HomePageState extends State<MainScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (state is CatFactLoaded) {
             try {
-              final newTask = Cat(
+              final newTask = CatSavedModel(
                 fact: state.fact,
                 createdAt: state.createdAt,
                 image: state.imageUrl,

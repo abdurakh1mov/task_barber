@@ -12,10 +12,10 @@ abstract class CatState extends Equatable {
 class CatInitial extends CatState {}
 
 class CatLoaded extends CatState {
-  final List<Cat> tasks;
+  final List<CatSavedModel> tasks;
 
   const CatLoaded(this.tasks);
 
   @override
-  List<Cat> get props => tasks;
+  List<CatSavedModel> get props => tasks;
 }
